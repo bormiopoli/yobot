@@ -1,4 +1,6 @@
 import datetime, time
+import os
+import argparse
 from notifications import authenticate_for_gmail_notifications, create_message_with_attachment,\
     generate_notification
 from functions import redistribute_small_weights, redistribute_missing_weight, check_structure_conforms_requirements, \
@@ -13,7 +15,6 @@ import warnings
 import numpy as np
 
 warnings.filterwarnings("ignore")
-
 
 def select_columns_for_training(mydf):
     mydf = mydf[['BTC_index', 'BTC', 'macd', 'osc', 'rsi', 'bollinger_mavg']]
@@ -164,12 +165,15 @@ def chunk_iter_df(df, chunksize=SYNCH_INTERVAL):
 
 if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser(description='Interval of binance klines')
+    parser.add_argument("--interval", default="1m", help="Test variable")
+    args = parser.parse_args()
+    interval = args.interval
     i = 1
     start_time = time.time()
     m = load_model(f'{root}/keras_model_TD_X')
 
     print("STARTING")
-
 
     i=0
     last_btc_amount=[]
@@ -180,7 +184,7 @@ if __name__ == '__main__':
             mytime = time.time()
 
             # indicator_value = test_result_w_binance_data(m, interval='1m')
-            indicator_value = test_result_w_binance_data_old(m, interval='1m')
+            indicator_value = test_result_w_binance_data_old(m, interval=interval)
 
             if indicator_value is np.nan:
                 pass
