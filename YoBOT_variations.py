@@ -30,7 +30,6 @@ def generate_structure_consumer(prediction, i=0, last_btc_amount=[], last_stable
 
     except Exception as error:
         print("GENERATION OF STRATEGY:", error)
-        time.sleep(15)
         return
 
     btc_chosens_strategy_amount = float(str(round(prediction, DECIMAL_PLACES)))
@@ -45,7 +44,6 @@ def generate_structure_consumer(prediction, i=0, last_btc_amount=[], last_stable
         dict_with_ticker_and_weights = redistribute_missing_weight(dict_with_ticker_and_weights)
         if last_stable_percent == round(1-btc_chosens_strategy_amount, DECIMAL_PLACES):
             print(f"SAME PERCENTAGE STRUCTURE: Skipping execution - {last_stable_percent} - Btc Chosen Amount: {btc_chosens_strategy_amount}")
-            time.sleep(50)
             return
 
         if len(last_btc_amount)>=2:
@@ -63,7 +61,6 @@ def generate_structure_consumer(prediction, i=0, last_btc_amount=[], last_stable
 
     else:
         print("NO CONDITION TRIGGERED - Prob.", prediction)
-        time.sleep(30)
         return
 
 
@@ -76,7 +73,6 @@ def generate_structure_consumer(prediction, i=0, last_btc_amount=[], last_stable
     except:
         create_message_with_attachment(gmail_service, 'me',
                                        message_text=f'ST ASSETS 1h - YoBOT assertion error: The structure does not sum to 1.0 - {bodies_to_write}')
-        time.sleep(15)
         return
 
     # HERE THE STRUCTURE OF THE STRATEGY IS CHANGED
@@ -105,7 +101,6 @@ def generate_structure_consumer(prediction, i=0, last_btc_amount=[], last_stable
             f"This is the structure that failed for execution {i} \n: {bodies_to_write} - {datetime.datetime.strftime(datetime.datetime.today(), '%d/%m/%Y-%H:%M')}")
         print(
             f"This is the structure that failed for execution {i} \n: {bodies_to_write} - {datetime.datetime.strftime(datetime.datetime.today(), '%d/%m/%Y-%H:%M')}")
-        time.sleep(15)
         return
 
     try:
@@ -122,9 +117,6 @@ def generate_structure_consumer(prediction, i=0, last_btc_amount=[], last_stable
         print(
             f"Set Structure failed: {error} - {datetime.datetime.strftime(datetime.datetime.today(), '%d/%m/%Y-%H:%M')}")
         raise NotImplementedError
-
-    i += 1
-    time.sleep(30)
 
     return last_btc_amount, last_stable_percent
 
