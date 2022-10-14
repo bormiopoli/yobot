@@ -755,7 +755,7 @@ def preprocess_df(df, custom_interval_for_ta=1):
 
 def test_result_w_binance_data(m, interval, custom_interval_for_ta=None):
 
-    df = pd.read_csv('BTC_data.csv')
+    df = pd.read_csv(f'{root}/BTC_data.csv')
 
     try:
         if not custom_interval_for_ta:
