@@ -8,6 +8,7 @@ from ta.volume import AccDistIndexIndicator
 from ta.volatility import AverageTrueRange
 from ta.volatility import BollingerBands
 from main_test import TestIconomi, MY_STRATEGY
+from binance_connection import remove_ticker_not_in_binance
 import pandas as pd
 from collections.abc import Iterable
 from logger import logger, root
