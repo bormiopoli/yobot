@@ -188,8 +188,9 @@ if __name__ == '__main__':
                                                       i,
                                                       last_btc_amount=last_btc_amount,
                                                       last_stable_percent=last_stable_percent)
-                last_btc_amount = mytuple[0]
-                last_stable_percent = mytuple[1]
+                if mytuple is not None:
+                    last_btc_amount = mytuple[0]
+                    last_stable_percent = mytuple[1]
             i += 1
             time.sleep(round(60 - (time.time()-mytime)) if (time.time()-mytime)<59 else 1)
 
