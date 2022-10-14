@@ -10,7 +10,7 @@ from ta.volatility import BollingerBands
 from main_test import TestIconomi, MY_STRATEGY
 import pandas as pd
 from collections.abc import Iterable
-from logger import logger
+from logger import logger, root
 from multiprocessing import Pool
 from matplotlib import pyplot as plt
 import numpy as np
