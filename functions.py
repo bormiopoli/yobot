@@ -756,7 +756,8 @@ def preprocess_df(df, custom_interval_for_ta=1):
 
 def test_result_w_binance_data(m, interval, custom_interval_for_ta=None):
 
-    df = pd.read_csv(f'{root.rsplit(os.sep, 1)[0]}/BTC_data.csv')
+    # df = pd.read_csv(f'{root.rsplit(os.sep, 1)[0]}/BTC_data.csv')
+    df = remove_ticker_not_in_binance(['BTC'], interval=interval)
 
     try:
         if not custom_interval_for_ta:
