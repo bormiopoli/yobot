@@ -792,7 +792,7 @@ def test_result_w_binance_data(m, interval, custom_interval_for_ta=None):
         a[6][~a[5]] = None
 
         a.plot(subplots=True)
-        pyplot.savefig(os.environ['HOME']+f'keras_model_variables_{interval}.png')
+        pyplot.savefig(os.environ['HOME']+os.sep+f'keras_model_variables_{interval}.png')
         pyplot.close()
 
         return float(a[6].tail(1))
