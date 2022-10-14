@@ -171,7 +171,7 @@ if __name__ == '__main__':
     interval = args.interval
     i = 1
     start_time = time.time()
-    m = load_model(f'{root}/keras_model_TD_X')
+    m = load_model(f'{root}/yobot/keras_model_TD_X')
 
     print("STARTING")
 
