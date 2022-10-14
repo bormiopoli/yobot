@@ -10,6 +10,7 @@ import pandas as pd
 from multiprocessing import Queue, Process
 from keras.models import load_model
 import warnings
+import numpy as np
 
 warnings.filterwarnings("ignore")
 
@@ -186,14 +187,17 @@ if __name__ == '__main__':
         try:
             mytime = time.time()
 
-            indicator_value = test_result_w_binance_data(m, interval='1h')
+            indicator_value = test_result_w_binance_data(m, interval='1m')
 
-            mytuple = generate_structure_consumer(indicator_value,
-                                                  i,
-                                                  last_btc_amount=last_btc_amount,
-                                                  last_stable_percent=last_stable_percent)
-            last_btc_amount = mytuple[0]
-            last_stable_percent = mytuple[1]
+            if indicator_value is np.nan:
+                pass
+            else:
+                mytuple = generate_structure_consumer(indicator_value,
+                                                      i,
+                                                      last_btc_amount=last_btc_amount,
+                                                      last_stable_percent=last_stable_percent)
+                last_btc_amount = mytuple[0]
+                last_stable_percent = mytuple[1]
             i += 1
             time.sleep(round(60 - (time.time()-mytime)) if (time.time()-mytime)<59 else 1)
 
