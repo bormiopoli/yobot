@@ -10,7 +10,7 @@ BINANCE_API_KEY = os.environ['BINANCE_API_KEY']
 BINANCE_SECRET = os.environ['BINANCE_SECRET']
 MYSECRET = os.environ['MYSECRET']
 
-# values = ['1INCH', 'AAVE', 'ADA', 'ADX', 'AION', 'AKRO', 'ALGO', 'ALPHA', 'ANKR', 'ANT', 'AR', 'AST', 'ATOM', 'AUDIO', 'AVAX', 'AXS', 'BADGER', 'BAL', 'BAND', 'BAT', 'BCH', 'BLZ', 'BNB', 'BNT', 'BTC', 'BTS', 'CAKE', 'CELO', 'CHR', 'CHZ', 'COMP', 'COTI', 'CRO', 'CRV', 'CVC', 'CVX', 'DASH', 'DCR', 'DENT', 'DGB', 'DNT', 'DOGE', 'DOT', 'DYDX', 'EGLD', 'ELF', 'ENJ', 'EOS', 'ETC', 'ETH', 'FET', 'FIL', 'FLOW', 'FRONT', 'FTM', 'FTT', 'FXS', 'GALA', 'GAS', 'GNT', 'GRT', 'HBAR', 'ICP', 'ICX', 'INJ', 'IRIS', 'JASMY', 'KAVA', 'KMD', 'KNC', 'KP3R', 'KSM', 'LDO', 'LINA', 'LINK', 'LOOM', 'LRC', 'LSK', 'LTC', 'MANA', 'MATIC', 'MDX', 'MINA', 'MIR', 'MITH', 'MKR', 'MLN', 'MTL', 'NANO', 'NEAR', 'NEO', 'NULS', 'OCEAN', 'OGN', 'OMG', 'ONE', 'OXT', 'PAXG', 'PNT', 'POWR']
+# values = ['1INCH', 'AAVE', 'ADaA', 'ADX', 'AION', 'AKRO', 'ALGO', 'ALPHA', 'ANKR', 'ANT', 'AR', 'AST', 'ATOM', 'AUDIO', 'AVAX', 'AXS', 'BADGER', 'BAL', 'BAND', 'BAT', 'BCH', 'BLZ', 'BNB', 'BNT', 'BTC', 'BTS', 'CAKE', 'CELO', 'CHR', 'CHZ', 'COMP', 'COTI', 'CRO', 'CRV', 'CVC', 'CVX', 'DASH', 'DCR', 'DENT', 'DGB', 'DNT', 'DOGE', 'DOT', 'DYDX', 'EGLD', 'ELF', 'ENJ', 'EOS', 'ETC', 'ETH', 'FET', 'FIL', 'FLOW', 'FRONT', 'FTM', 'FTT', 'FXS', 'GALA', 'GAS', 'GNT', 'GRT', 'HBAR', 'ICP', 'ICX', 'INJ', 'IRIS', 'JASMY', 'KAVA', 'KMD', 'KNC', 'KP3R', 'KSM', 'LDO', 'LINA', 'LINK', 'LOOM', 'LRC', 'LSK', 'LTC', 'MANA', 'MATIC', 'MDX', 'MINA', 'MIR', 'MITH', 'MKR', 'MLN', 'MTL', 'NANO', 'NEAR', 'NEO', 'NULS', 'OCEAN', 'OGN', 'OMG', 'ONE', 'OXT', 'PAXG', 'PNT', 'POWR']
 client = Spot(key=BINANCE_API_KEY, secret=BINANCE_SECRET)
 
 
@@ -86,7 +86,7 @@ def get_indicator(ticker, interval='1m'):
 
     for indicator_ticker in indicator_codes:
         try:
-            url = f"https://api.taapi.io/{indicator_ticker}?secret={MY_SECRET}&exchange=binance&symbol={ticker}/USDT&interval={interval}"
+            url = f"https://api.taapi.io/{indicator_ticker}?secret={MYSECRET}&exchange=binance&symbol={ticker}/USDT&interval={interval}"
             indicator = requests.get(url)
             content = indicator.content.decode('ascii')
             json_content = json.loads(content)
@@ -100,7 +100,7 @@ def get_indicator(ticker, interval='1m'):
     return indicators
 
 
-def retrieve_bulk_indicators_body(ticker, interval="1m", MY_SECRET=MY_SECRET):
+def retrieve_bulk_indicators_body(ticker, interval="1m", MY_SECRET=MYSECRET):
     if type(ticker) == str:
         body = {
             "secret": f"{MY_SECRET}",
@@ -148,7 +148,7 @@ def retrieve_bulk_indicators_body(ticker, interval="1m", MY_SECRET=MY_SECRET):
         return to_return
 
 
-def get_bulk_indicators(ticker="BTC", interval="1m", MY_SECRET=MY_SECRET):
+def get_bulk_indicators(ticker="BTC", interval="1m", MY_SECRET=MYSECRET):
     url = "https://api.taapi.io/bulk"
     bodies = retrieve_bulk_indicators_body(ticker)
     all_indicators = {}
