@@ -5,7 +5,7 @@ from functions import redistribute_small_weights, redistribute_missing_weight, c
     generate_structure_values_body, MY_STRATEGY, DECIMAL_PLACES, check_percent_of_stable_in_strategy
 from functions import test_iconomi, SYNCH_INTERVAL
 from logger import logger, root
-from functions import test_result_w_binance_data
+from functions import test_result_w_binance_data, test_result_w_binance_data_old
 import pandas as pd
 from multiprocessing import Queue, Process
 from keras.models import load_model
@@ -179,7 +179,8 @@ if __name__ == '__main__':
         try:
             mytime = time.time()
 
-            indicator_value = test_result_w_binance_data(m, interval='1m')
+            # indicator_value = test_result_w_binance_data(m, interval='1m')
+            indicator_value = test_result_w_binance_data_old(m, interval='1m')
 
             if indicator_value is np.nan:
                 pass

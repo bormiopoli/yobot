@@ -802,20 +802,66 @@ def test_result_w_binance_data(m, interval, custom_interval_for_ta=None):
 
         return np.nan
 
-# def test_result_w_binance_data(m, interval, custom_interval_for_ta=None, tickers=['BTC', 'CVX']):
-#
-#     binance_data = collect_binance_data_per_ticker(tickers, interval='1h')
-#     dfs = []
-#     for el in binance_data:
-#         preprocess_df(el)
-#         dfs.append(el)
-#
-#     # dfs = parallelize_queries(preprocess_df, binance_data.items(), mode='map')
-#     dfs_out = parallelize_queries(transform_into_nparray_and_predict, dfs, mode='map')
-#
-#     parallelize_queries(plot_price_tickers, dfs_out, mode='a')
-#
-#     return dfs_out[0][0], dfs_out[0][3]
+
+def test_result_w_binance_data_old(m, interval, custom_interval_for_ta=None):
+
+    df = remove_ticker_not_in_binance(['BTC'], interval=interval)
+    if not custom_interval_for_ta:
+        custom_interval_for_ta = 1
+    if interval == '1h':
+        interval = 60
+    elif interval == '1d':
+        interval = 60 * 24
+    elif interval == '1m':
+        interval = 1
+    df = pd.DataFrame.from_records(df['BTC'])
+    # df = select_base_columns(df)
+    df = convert_columns_to_numeric(df)
+    df = fill_prices_from_candles(df)
+    df = shift_column_compute(df, DELTA_INTERVAL // (60 * 24))
+    df = ta_batch_make(df, day_conversion_factor=custom_interval_for_ta)
+    df = df.fillna(0)
+    # df = df[(df['BTC_index'] == 1) | (df['BTC_index'] == -1)]
+
+    df.drop(['bb_3', 'BTC_min', 'BTC_max'], axis=1, inplace=True)
+    _, temp_x, _, temp_y, btc_price = prepare_keras_data(df)
+    # temp_x, temp_y = select_x_y_for_training(df)
+    y_pred_full = m.predict(temp_x)
+    y_pred_full = pd.DataFrame.from_records(y_pred_full)
+
+    window = 28
+    mv_max = y_pred_full.rolling(window).max()
+    mv_min = y_pred_full.rolling(window).min()
+    mv_avg = mv_max - mv_min
+
+    a = pd.concat([btc_price.iloc[-999::].reset_index(drop=True),
+                   pd.DataFrame.from_dict(list(temp_y)).reset_index(drop=True),
+                   y_pred_full.reset_index(drop=True),
+                   pd.DataFrame.from_dict(np.gradient(np.array(list(y_pred_full[0]), dtype=float), 1))
+                   ], axis=1, ignore_index=True)
+
+    # a[5] = (a[2].diff(1) + a[2].diff(3))/2
+    # a[6] = a[2]
+    # a[6][(a[5] < 0.05) & (a[5] > -0.05)] = None
+
+    # a[5] = (((a[2].diff(1) - a[2].shift(1).diff(1)) > 0) & ((a[2].shift(1).diff(1) - a[2].shift(2).diff(1)) < 0)) | (
+    # ((a[2].diff(1) - a[2].shift(1).diff(1)) < 0) & ((a[2].shift(1).diff(1) - a[2].shift(2).diff(1)) > 0))
+    # a[6] = a[2]
+    # a[6][~a[5]] = None
+
+    a[5] = (((a[3] / a[3].shift(1)) > 0) & ((a[3].shift(1) / a[3].shift(2)) < 0)) | (
+            ((a[3] / a[3].shift(1)) < 0) & ((a[3].shift(1) / a[3].shift(2)) > 0))
+    a[6] = a[2]
+    a[6][~a[5]] = None
+
+    # check = pd.concat([pd.DataFrame.from_dict(list(a[3])), pd.DataFrame.from_dict(list(a[6]))], axis=1, ignore_index=True)
+    # check.plot()
+
+    a.plot(subplots=True)
+    pyplot.savefig(os.environ['HOME'] + os.sep + 'keras_model_variables_1d.png')
+    pyplot.close()
+
+    return float(a[6].tail(1))
 
 
 def prepare_keras_data(initial_data, ticker='BTC'):
