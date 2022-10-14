@@ -18,6 +18,6 @@ def initialize_logger(logging, root):
     logger.addHandler(fh)
     return logger
 
-root = "."
+root = os.getcwd()
 
 logger = initialize_logger(logging, root)

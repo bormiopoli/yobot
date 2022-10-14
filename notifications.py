@@ -86,7 +86,7 @@ def gmail_authenticate(creds=None):
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                f'{root}/client_secret_1052107981248-m5edd8e31i3duj6dcatbndio7cbiurcp.apps.googleusercontent.com.json',
+                f'{root}/client_secret.json',
                 SCOPES)
             creds = flow.run_local_server(port=0)
             # creds = creds.with_subject("bormiopoli@gmail.com")

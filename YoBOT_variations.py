@@ -2,7 +2,7 @@ import datetime, time
 from notifications import authenticate_for_gmail_notifications, create_message_with_attachment,\
     generate_notification
 from functions import redistribute_small_weights, redistribute_missing_weight, check_structure_conforms_requirements, \
-    generate_structure_values_body, MYSTRATEGY, DECIMAL_PLACES, check_percent_of_stable_in_strategy
+    generate_structure_values_body, MY_STRATEGY, DECIMAL_PLACES, check_percent_of_stable_in_strategy
 from functions import test_iconomi, SYNCH_INTERVAL
 from logger import logger, root
 from functions import test_result_w_binance_data
@@ -25,7 +25,7 @@ def generate_structure_consumer(prediction, i=0, last_btc_amount=[], last_stable
 
 
     try:
-        stable_percent, list_of_assets = check_percent_of_stable_in_strategy(MYSTRATEGY)
+        stable_percent, list_of_assets = check_percent_of_stable_in_strategy(MY_STRATEGY)
 
     except Exception as error:
         print("GENERATION OF STRATEGY:", error)
@@ -173,19 +173,10 @@ if __name__ == '__main__':
 
     i = 1
     start_time = time.time()
-    # q_data = Queue(1)
-    q_model = Queue(1)
-    # data_process_producer = Process(target=retrieve_data_producer, args=(q_data,))
-    #data_process_producer.start()
-    # data_process_consumer = Process(target=retrieve_data_consumer, args=(q_data,))
-    #data_process_consumer.start()
-    strategy_consumer = Process(target=generate_structure_consumer, args=(q_model,))
-    # m = import_model("/home/daltonik/Desktop/algo_assets_variations/file_folder/model_test.pkl")
-    # m = import_model()
-    print("FINISHED INITIALIZING BROKERS")
-    strategy_consumer.start()
-
     m = load_model(f'{root}/keras_model_TD_X')
+
+    print("STARTING")
+
 
     i=0
     last_btc_amount=[]
@@ -215,6 +206,7 @@ if __name__ == '__main__':
                 print(f"ST ASSETS - YoBOT CRASHED 0.0 - ERROR: {error} - {datetime.datetime.strftime(datetime.datetime.today() , '%d/%m/%Y-%H:%M')}")
                 logger.error(f"ST ASSETS - YoBOT CRASHED 0.0 - ERROR: {error} - {datetime.datetime.strftime(datetime.datetime.today() , '%d/%m/%Y-%H:%M')}")
                 time.sleep(round(60 - (time.time()-mytime)) if (time.time()-mytime)<59 else 1)
-            except:
+            except Exception as err:
+                print(err)
                 continue
             continue

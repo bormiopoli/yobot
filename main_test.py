@@ -9,7 +9,7 @@ import time
 import json
 from logger import logger
 
-MYSTRATEGY = os.environ['MYSTRATEGY']
+MY_STRATEGY = os.environ['MY_STRATEGY']
 
 class TestIconomi():
 
@@ -26,7 +26,7 @@ class TestIconomi():
             reputation = None
         return reputation
 
-    def get_price_history(self, ticker=MYSTRATEGY, granulation=None, fromv=None, to=None):
+    def get_price_history(self, ticker=MY_STRATEGY, granulation=None, fromv=None, to=None):
         granulation = "?="+str(granulation) if granulation is not None else ""
         fromv = "?="+str(fromv) if fromv is not None else ""
         to = "?="+str(to) if to is not None else ""
@@ -54,19 +54,19 @@ class TestIconomi():
     def test_activity(self):
         self.get('/v1/user/activity')
 
-    def test_get_structure(self, ticker=MYSTRATEGY):
+    def test_get_structure(self, ticker=MY_STRATEGY):
         ret = self.get('/v1/strategies/' + ticker + '/structure')
         return ret
 
-    def test_get_asset_prices(self, ticker=MYSTRATEGY):
+    def test_get_asset_prices(self, ticker=MY_STRATEGY):
         ret = self.get('/v1/assets/' + ticker + '/price')
         return ret
 
-    def test_get_strategy_prices(self, ticker=MYSTRATEGY):
+    def test_get_strategy_prices(self, ticker=MY_STRATEGY):
         ret = self.get('/v1/strategies/' + ticker + '/price')
         return ret
 
-    def test_set_structure(self, values=None, ticker = MYSTRATEGY, speed="MEDIUM"):
+    def test_set_structure(self, values=None, ticker = MY_STRATEGY, speed="MEDIUM"):
         if values == None:
             raise "insert 'values' field"
         payload = {

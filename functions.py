@@ -7,7 +7,7 @@ from ta.trend import ADXIndicator, AroonIndicator, IchimokuIndicator
 from ta.volume import AccDistIndexIndicator
 from ta.volatility import AverageTrueRange
 from ta.volatility import BollingerBands
-from main_test import TestIconomi, MYSTRATEGY
+from main_test import TestIconomi, MY_STRATEGY
 import pandas as pd
 from collections.abc import Iterable
 from logger import logger
@@ -111,7 +111,7 @@ def reattempt_asset_performance_retrieval(api_url, function):
 
     return prices_response
 
-def return_variation_of_strategy_for_stop_loss_rule(ticker=MYSTRATEGY):
+def return_variation_of_strategy_for_stop_loss_rule(ticker=MY_STRATEGY):
 
     prices_response = test_iconomi.test_get_strategy_prices(ticker=ticker)
     price = 0
@@ -177,7 +177,7 @@ def return_reputation_yield_of_strategy(response_all_strategies_tickers):
     return all_responses
 
 
-def get_price_change_of_strategy(previous_timestamp, ticker=MYSTRATEGY):
+def get_price_change_of_strategy(previous_timestamp, ticker=MY_STRATEGY):
     """
     This function retrieve the price change of a strategy
     :param previous_timestamp: float
