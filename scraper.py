@@ -10,7 +10,7 @@ BINANCE_SECRET = os.environ['BINANCE_SECRET']
 MYSECRET = os.environ['MYSECRET']
 
 
-def remove_ticker_not_in_binance(my_list, client=client, interval='1m', n_records=0, ):
+def remove_ticker_not_in_binance(my_list, client, interval='1m', n_records=0, ):
 
     all_candles = {}
     for i, value in enumerate(my_list):
@@ -20,12 +20,12 @@ def remove_ticker_not_in_binance(my_list, client=client, interval='1m', n_record
         ticker = value +"USDT"
         # Get klines of BTCUSDT at 1m interval
         try:
-            data[value] = get_binance_k_lines(ticker, interval, value, n_records=n_records, myclient=client)
+            data[value] = get_binance_k_lines(ticker, interval, value, client=client, n_records=n_records)
 
         except Exception as err:
 
             client = Spot(key=BINANCE_API_KEY, secret=BINANCE_SECRET)
-            data[value] = get_binance_k_lines(ticker, interval, value, myclient=client)
+            data[value] = get_binance_k_lines(ticker, interval, value, client)
             print(err)
 
     return data
@@ -37,7 +37,7 @@ def convert_columns_to_numeric(fun_df):
     return fun_df
 
 
-def get_binance_k_lines(ticker, interval, value, all_data={}, myclient=client, n_records=0):
+def get_binance_k_lines(ticker, interval, value, myclient, all_data={}, n_records=0):
 
     if n_records == 0:
         n_records = 1000
