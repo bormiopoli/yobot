@@ -4,7 +4,7 @@ from binance.spot import Spot
 
 
 # BINANCE API BACKUP: 3KRQ5LDAWDGLVAPQ
-CSV_BACKUP_FILE_PATH = "BTC_data.csv"
+CSV_BACKUP_FILE_PATH = os.environ['HOME'] + os.sep + "BTC_data.csv"
 BINANCE_API_KEY = os.environ['BINANCE_API_KEY']
 BINANCE_SECRET = os.environ['BINANCE_SECRET']
 MYSECRET = os.environ['MYSECRET']
