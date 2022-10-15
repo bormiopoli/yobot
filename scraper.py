@@ -20,12 +20,12 @@ def remove_ticker_not_in_binance(my_list, client, interval='1m', n_records=0, ):
         ticker = value +"USDT"
         # Get klines of BTCUSDT at 1m interval
         try:
-            data[value] = get_binance_k_lines(ticker, interval, value, client=client, n_records=n_records)
+            data[value] = get_binance_k_lines(ticker, interval, value, myclient=client, n_records=n_records)
 
         except Exception as err:
 
             client = Spot(key=BINANCE_API_KEY, secret=BINANCE_SECRET)
-            data[value] = get_binance_k_lines(ticker, interval, value, client)
+            data[value] = get_binance_k_lines(ticker, interval, value, myclient=client)
             print(err)
 
     return data
