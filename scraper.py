@@ -8,9 +8,9 @@ CSV_BACKUP_FILE_PATH = "BTC_data.csv"
 BINANCE_API_KEY = os.environ['BINANCE_API_KEY']
 BINANCE_SECRET = os.environ['BINANCE_SECRET']
 MYSECRET = os.environ['MYSECRET']
-client = Spot(key=BINANCE_API_KEY, secret=BINANCE_SECRET)
 
-def remove_ticker_not_in_binance(my_list, interval='1m', n_records=0):
+
+def remove_ticker_not_in_binance(my_list, client=client, interval='1m', n_records=0, ):
 
     all_candles = {}
     for i, value in enumerate(my_list):
@@ -20,7 +20,7 @@ def remove_ticker_not_in_binance(my_list, interval='1m', n_records=0):
         ticker = value +"USDT"
         # Get klines of BTCUSDT at 1m interval
         try:
-            data[value] = get_binance_k_lines(ticker, interval, value, n_records=n_records)
+            data[value] = get_binance_k_lines(ticker, interval, value, n_records=n_records, myclient=client)
 
         except Exception as err:
 
@@ -76,11 +76,12 @@ def get_binance_k_lines(ticker, interval, value, all_data={}, myclient=client, n
 def retrieve_data_producer():
     start = True
     while True:
+        client = Spot(key=BINANCE_API_KEY, secret=BINANCE_SECRET)
         try:
             # if os.path.exists(CSV_BACKUP_FILE_PATH):
             #     current_saved_data = pd.read_csv(CSV_BACKUP_FILE_PATH)
 
-            temp_dict_of_strategies_reputation = remove_ticker_not_in_binance(['BTC'])
+            temp_dict_of_strategies_reputation = remove_ticker_not_in_binance(['BTC'], client=client)
             # temp_dict_of_strategies_reputation = {**temp_dict_of_strategies_reputation, **indicators}
             df = pd.DataFrame.from_dict(temp_dict_of_strategies_reputation['BTC'])
             #df = select_base_columns(df)
@@ -90,6 +91,7 @@ def retrieve_data_producer():
                      'BTC_volume']]  # SELECT COLUMNS IN RIGHT ORDER FOR LATER CONCAT
 
             if df is not None:
+                print("df is not None")
                 # df = add_all_ta_features(df, open="BTC_open", high="BTC_high", low="BTC_low", close="BTC_close",
                 # volume="BTC_volume", fillna=True, conversion_interval=1)
 
@@ -101,11 +103,15 @@ def retrieve_data_producer():
                 df.to_csv(CSV_BACKUP_FILE_PATH, index=False, header=header_condition, mode='a')
                 print('APPENDED DATA INTO CSV - ',
                       datetime.datetime.strftime(datetime.datetime.today(), '%d/%m/%Y-%H:%M'))
+            else:
+                print("df is None")
+
             time.sleep(60)
             start = False
 
         except Exception as err:
             print("ERROR IN data producer : ", str(err))
+            continue
 
 
 if '__main__' == __name__:
